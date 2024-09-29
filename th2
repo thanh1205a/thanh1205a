@@ -1,0 +1,52 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <algorithm>
+
+using namespace std;
+
+// Hàm phân công công việc sử dụng greedy
+void jobScheduling(const vector<int>& jobs, int m) {
+    // Tạo một priority queue để lưu thời gian hoàn tất của mỗi máy
+    priority_queue<int, vector<int>, greater<int>> machineQueue;
+
+    // Ban đầu các máy có thời gian hoàn tất là 0
+    for (int i = 0; i < m; ++i) {
+        machineQueue.push(0);
+    }
+
+    // Phân công công việc theo thứ tự
+    for (int i = 0; i < jobs.size(); ++i) {
+        // Lấy máy có thời gian hoàn thành sớm nhất
+        int earliestFinishTime = machineQueue.top();
+        machineQueue.pop();
+
+        // Gán công việc vào máy đó và cập nhật lại thời gian hoàn thành
+        int newFinishTime = earliestFinishTime + jobs[i];
+        machineQueue.push(newFinishTime);
+
+        cout << "Công việc " << i + 1 << " (thời gian: " << jobs[i] << ") được gán cho máy với thời gian kết thúc sớm nhất: " << earliestFinishTime << endl;
+    }
+
+    // Thời gian hoàn thành của tất cả các máy
+    int maxFinishTime = 0;
+    while (!machineQueue.empty()) {
+        maxFinishTime = max(maxFinishTime, machineQueue.top());
+        machineQueue.pop();
+    }
+
+    cout << "Thời gian hoàn tất tất cả công việc là: " << maxFinishTime << endl;
+}
+
+int main() {
+    // Danh sách thời gian thực hiện của các công việc
+    vector<int> jobs = {2, 14, 4, 16, 6, 5};
+
+    // Số lượng máy
+    int m = 3;
+
+    // Gọi hàm phân công công việc
+    jobScheduling(jobs, m);
+
+    return 0;
+}
